@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controller.LoginController"
+      alignment="CENTER"
+      spacing="12"
+      prefWidth="300"
+      prefHeight="250">
+
+    <Label text="DompetIn"
+           style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+
+    <Label text="Login Mahasiswa" />
+
+    <TextField fx:id="txtUsername"
+               promptText="Username"
+               prefWidth="200" />
+
+    <PasswordField fx:id="txtPassword"
+                    promptText="Password"
+                    prefWidth="200" />
+
+    <Button text="Login"
+            prefWidth="120"
+            onAction="#handleLogin" />
+
+</VBox>

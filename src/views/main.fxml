@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.DashboardController"
+            stylesheets="@dashboard.css">
+
+    <top>
+        <VBox spacing="6" styleClass="header" prefHeight="110" alignment="CENTER_LEFT">
+            <Label text="DompetIn" styleClass="title"/>
+            <Label fx:id="lblStatus" text="Status: AMAN" styleClass="status"/>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="20" style="-fx-padding:20;">
+
+            <HBox spacing="20">
+                <VBox styleClass="card" prefWidth="480">
+                    <Label text="Pengeluaran Hari Ini" styleClass="card-title"/>
+                    <Label fx:id="lblTotalHarian" styleClass="card-value"/>
+                    <ProgressBar fx:id="progressHarian" prefWidth="440"/>
+                </VBox>
+
+                <VBox styleClass="card" prefWidth="480">
+                    <Label text="Pemasukan Hari Ini" styleClass="card-title"/>
+                    <Label fx:id="lblPemasukan" styleClass="card-value"/>
+                </VBox>
+            </HBox>
+
+            <HBox spacing="15" alignment="CENTER">
+                <Button text="+ Tambah"
+                        styleClass="btn-primary"
+                        onAction="#handleTambahTransaksi"/>
+
+                <Button text="Edit"
+                        styleClass="btn-secondary"
+                        onAction="#handleEditTransaksi"/>
+
+                <Button text="Hapus"
+                        styleClass="btn-danger"
+                        onAction="#handleHapusTransaksi"/>
+                
+                <Button text="What If Simulation"
+                        styleClass="btn-warning"
+                        onAction="#handleWhatIf"/>
+            			   
+                <Button text="Atur Batas Harian"
+                        styleClass="btn-secondary"
+                        onAction="#handleSetDailyLimit"/>
+            </HBox>
+
+            <TableView fx:id="tableTransaksi" prefHeight="350" styleClass="table">
+                <columns>
+                    <TableColumn fx:id="colTanggal" text="Tanggal" prefWidth="120"/>
+                    <TableColumn fx:id="colJenis" text="Jenis" prefWidth="140"/>
+                    <TableColumn fx:id="colNominal" text="Nominal" prefWidth="150"/>
+                    <TableColumn fx:id="colCatatan" text="Catatan" prefWidth="450"/>
+                </columns>
+            </TableView>
+
+        </VBox>
+    </center>
+
+</BorderPane>
