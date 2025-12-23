@@ -7,11 +7,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class UserDAO {
-
-    /**
-     * Mengambil data user berdasarkan username
-     * Digunakan untuk proses login
-     */
     public static User findByUsername(String username) {
 
         String sql = """
@@ -40,27 +35,20 @@ public class UserDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return null; // user tidak ditemukan
+        return null;
     }
-    
- // ==========================================
-    // METHOD BARU: UNTUK SYARAT CONSTRUCTOR 2
-    // ==========================================
+
     public static void registerUser(User user) {
         String sql = "INSERT OR IGNORE INTO users (username, password_hash) VALUES (?, ?)";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            // Di sini kita mengambil data dari Objek User yang dibuat pakai Constructor ke-2
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getPasswordHash());
 
             ps.executeUpdate();
-            
-            // Set default limit 0 di tabel settings untuk user baru ini
-            // (Kita cari ID-nya dulu, lalu insert ke settings)
+
             User savedUser = findByUsername(user.getUsername());
             if (savedUser != null) {
                 SettingsDAO.saveDailyLimit(savedUser.getId(), 0);

@@ -8,26 +8,17 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
-// HAPUS IMPORT SERVICE KARENA TIDAK DIPAKAI LAGI
-
 public class WhatIfController {
-
     @FXML private TextField txtKeyword;
     @FXML private TextField txtNominal;
     @FXML private Label lblHasil;
     
     private int currentUserId;
 
-    // HAPUS VARIABLE currentUserId DAN transaksiService DI SINI
-    // KARENA SUDAH TIDAK DIPAKAI LAGI
-
-    // Method ini TETAP ADA supaya DashboardController tidak error saat memanggilnya.
-    // Tapi isinya dikosongkan saja karena ID-nya tidak kita butuhkan untuk hitungan ini.
     public void setUser(int userId) {
     	this.currentUserId = userId;
     }
 
-    // ================== HANDLER ==================
     @FXML
     public void handleSimulasi() { 
         try {
@@ -39,8 +30,7 @@ public class WhatIfController {
             if (keyword.isEmpty() || nominal <= 0) {
                 throw new IllegalArgumentException();
             }
-            
-            // Logika hitungan murni matematika (Input * 30 hari)
+
             double estimasiUser = nominal * 30;
 
             lblHasil.setText(

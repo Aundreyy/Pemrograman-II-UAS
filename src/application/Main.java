@@ -10,11 +10,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-
-        // 1. Inisialisasi database & tabel
         InitDatabase.init();
 
-        // 2. Load halaman login
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/views/login.fxml")
         );

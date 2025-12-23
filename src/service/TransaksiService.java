@@ -9,8 +9,6 @@ import dao.SettingsDAO;
 import dao.TransaksiDAO;
 
 public class TransaksiService {
-
-    // ===================== RESULT CLASS =====================
     public static class DailyCheckResult {
         public final String status;
         public final double limit;
@@ -21,11 +19,9 @@ public class TransaksiService {
         }
     }
 
-    // ===================== CRUD =====================
     public DailyCheckResult tambahTransaksi(Transaksi t) {
         TransaksiDAO.insert(t);
 
-        // setelah insert, langsung cek status harian
         return cekStatusHarian(t.getUserId());
     }
 
@@ -37,12 +33,10 @@ public class TransaksiService {
         TransaksiDAO.update(t);
     }
 
-    // ===================== QUERY TRANSAKSI =====================
     public List<Transaksi> getTransaksiHarian(int userId, LocalDate tanggal) {
         return TransaksiDAO.getByUserAndDate(userId, tanggal);
     }
 
-    // ===================== TOTAL =====================
     public double getTotalPengeluaranHarian(int userId, LocalDate tanggal) {
         return TransaksiDAO.getTotalPengeluaranHarian(userId, tanggal);
     }
@@ -51,7 +45,6 @@ public class TransaksiService {
         return TransaksiDAO.getTotalPemasukanHarian(userId, tanggal);
     }
 
-    // ===================== STATUS =====================
     public DailyCheckResult cekStatusHarian(int userId) {
 
         double totalPengeluaran =
@@ -66,8 +59,7 @@ public class TransaksiService {
 
         return new DailyCheckResult(status, limit);
     }
-    
-    // ================= WHAT IF =================
+
     public double simulasiRataRataPengeluaran(
             int userId,
             String keyword
@@ -78,9 +70,12 @@ public class TransaksiService {
                         keyword
                 );
     }
-    
-    //SET DAILY LIMIT
+
     public void updateDailyLimit(int userId, double limit) {
         SettingsDAO.saveDailyLimit(userId, limit);
+    }
+
+    public List<Transaksi> getAllTransaksi(int userId) {
+        return TransaksiDAO.getAllByUser(userId);
     }
 }

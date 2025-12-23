@@ -37,33 +37,27 @@ public class TransaksiController {
         txtCatatan.setText(t.getCatatan());
     }
 
-    // ================== HANDLERS ==================
+
     
     @FXML
     public void handleTambahPemasukan() {
-        simpan(true); // true = Pemasukan
+        simpan(true);
     }
 
     @FXML
     public void handleTambahPengeluaran() {
-        simpan(false); // false = Pengeluaran
+        simpan(false);
     }
 
-    // ================== LOGIKA UTAMA ==================
     private void simpan(boolean isPemasukan) {
         try {
             double nominal = Double.parseDouble(txtNominal.getText());
             String catatan = txtCatatan.getText();
 
             if (transaksiEdit != null) {
-                // ================= MODE EDIT (RE-CREATE OBJECT) =================
-                // Kita harus membuat objek baru supaya Class-nya berubah (Pemasukan <-> Pengeluaran)
-                
-                // 1. Ambil ID dan Tanggal dari data lama (biar nggak hilang)
                 int idLama = transaksiEdit.getId();
                 LocalDate tglLama = transaksiEdit.getTanggal();
 
-                // 2. Buat Objek Baru sesuai tombol yang diklik
                 Transaksi tBaru;
                 if (isPemasukan) {
                     tBaru = new Pemasukan(currentUserId, nominal, tglLama, catatan);
@@ -71,15 +65,11 @@ public class TransaksiController {
                     tBaru = new Pengeluaran(currentUserId, nominal, tglLama, catatan);
                 }
 
-                // 3. PENTING: Paksa ID objek baru sama dengan ID lama
-                // Ini kuncinya supaya Database melakukan UPDATE, bukan INSERT
                 tBaru.setId(idLama);
 
-                // 4. Kirim ke Service
                 transaksiService.updateTransaksi(tBaru);
 
             } else {
-                // ================= MODE BARU (INSERT) =================
                 Transaksi t = isPemasukan
                         ? new Pemasukan(currentUserId, nominal, LocalDate.now(), catatan)
                         : new Pengeluaran(currentUserId, nominal, LocalDate.now(), catatan);
@@ -87,12 +77,10 @@ public class TransaksiController {
                 transaksiService.tambahTransaksi(t);
             }
 
-            // Refresh Dashboard
             if (dashboardController != null) {
                 dashboardController.refreshFromPopup();
             }
 
-            // Tutup Popup
             Stage stage = (Stage) txtNominal.getScene().getWindow();
             stage.close();
 

@@ -13,7 +13,6 @@ import java.util.List;
 
 public class TransaksiDAO {
 
-    // ================= INSERT =================
     public static void insert(Transaksi t) {
 
         String sql =
@@ -39,7 +38,6 @@ public class TransaksiDAO {
         }
     }
 
-    // ================= DELETE =================
     public static void delete(int transaksiId) {
 
         String sql = "DELETE FROM transaksi WHERE id = ?";
@@ -60,7 +58,6 @@ public class TransaksiDAO {
     }
     // EDIT
     public static void update(Transaksi t) {
-        // PERBAIKAN: Tambahkan 'jenis = ?' agar database tahu jenisnya berubah
         String sql = "UPDATE transaksi SET nominal = ?, catatan = ?, jenis = ? WHERE id = ?";
 
         try (Connection conn = DBConnection.getConnection();
@@ -68,8 +65,7 @@ public class TransaksiDAO {
 
             stmt.setDouble(1, t.getNominal());
             stmt.setString(2, t.getCatatan());
-            
-            // INI KUNCINYA: Update kolom jenis (Pemasukan/Pengeluaran)
+
             stmt.setString(3, t.getJenis());
             
             stmt.setInt(4, t.getId());
@@ -81,7 +77,6 @@ public class TransaksiDAO {
         }
     }
 
-    // ================= GET BY USER & DATE =================
     public static List<Transaksi> getByUserAndDate(int userId, LocalDate date) {
 
         List<Transaksi> list = new ArrayList<>();
@@ -136,7 +131,6 @@ public class TransaksiDAO {
         return list;
     }
 
-    // ================= TOTAL PENGELUARAN =================
     public static double getTotalPengeluaranHarian(int userId, LocalDate date) {
 
         String sql =
@@ -164,7 +158,6 @@ public class TransaksiDAO {
         }
     }
 
-    // ================= TOTAL PEMASUKAN =================
     public static double getTotalPemasukanHarian(int userId, LocalDate date) {
 
         String sql =
@@ -191,8 +184,7 @@ public class TransaksiDAO {
             throw new RuntimeException("Gagal hitung pemasukan", e);
         }
     }
-    
- // ================= SIMULASI WHAT IF =================
+
     public static double getRataRataPengeluaranHarianByKeyword(
             int userId,
             String keyword
@@ -226,5 +218,42 @@ public class TransaksiDAO {
         }
     }
 
+    public static List<Transaksi> getAllByUser(int userId) {
+        List<Transaksi> list = new ArrayList<>();
 
+        String sql = "SELECT * FROM transaksi WHERE user_id = ? ORDER BY tanggal DESC, id DESC";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                String jenis = rs.getString("jenis");
+                Transaksi t;
+
+                if ("Pemasukan".equalsIgnoreCase(jenis)) {
+                    t = new Pemasukan(
+                        rs.getInt("user_id"),
+                        rs.getDouble("nominal"),
+                        LocalDate.parse(rs.getString("tanggal")),
+                        rs.getString("catatan")
+                    );
+                } else {
+                    t = new Pengeluaran(
+                        rs.getInt("user_id"),
+                        rs.getDouble("nominal"),
+                        LocalDate.parse(rs.getString("tanggal")),
+                        rs.getString("catatan")
+                    );
+                }
+                t.setId(rs.getInt("id"));
+                list.add(t);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }

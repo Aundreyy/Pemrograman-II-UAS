@@ -24,7 +24,7 @@ import model.Transaksi;
 import service.TransaksiService;
 import service.TransaksiService.DailyCheckResult;
 
-public class DashboardController { // Nama Class Sudah Benar
+public class DashboardController {
 
     @FXML private Label lblStatus;
     @FXML private Label lblTotalHarian;
@@ -42,7 +42,6 @@ public class DashboardController { // Nama Class Sudah Benar
     private final ObservableList<Transaksi> data = FXCollections.observableArrayList();
     private final NumberFormat rupiah = NumberFormat.getNumberInstance(Locale.of("id", "ID"));
 
-    // ===================== INITIALIZE (SUDAH DIUPDATE) =====================
     @FXML
     public void initialize() {
         // 1. SETUP KOLOM TABEL
@@ -60,21 +59,15 @@ public class DashboardController { // Nama Class Sudah Benar
         });
         colNominal.setCellValueFactory(c -> c.getValue().nominalProperty().asObject());
 
-        // 2. MASUKKAN DATA
         tableTransaksi.setItems(data);
 
-        // 3. LOGIKA INTERFACE LAPORAN (Polimorfisme)
-        // Saat baris diklik, method cetakLaporan() dari Interface akan dipanggil
         tableTransaksi.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                // Cek apakah object ini punya Interface Laporan? (Pemasukan & Pengeluaran pasti punya)
                 if (newSelection instanceof model.Laporan) {
                     model.Laporan laporan = (model.Laporan) newSelection;
                     
-                    // Tampilkan output interface ke Label Status di dashboard
                     lblStatus.setText(laporan.cetakLaporan());
                     
-                    // Debugging di console (Opsional)
                     System.out.println("Output Interface: " + laporan.cetakLaporan());
                 }
             }
@@ -87,7 +80,7 @@ public class DashboardController { // Nama Class Sudah Benar
     }
 
     private void refreshDashboard() {
-        List<Transaksi> list = transaksiService.getTransaksiHarian(currentUserId, LocalDate.now());
+    	List<Transaksi> list = transaksiService.getAllTransaksi(currentUserId);
         data.setAll(list);
 
         double totalPengeluaran = transaksiService.getTotalPengeluaranHarian(currentUserId, LocalDate.now());
@@ -110,7 +103,6 @@ public class DashboardController { // Nama Class Sudah Benar
         else if ("WASPADA".equals(result.status)) lblStatus.getStyleClass().add("status-waspada");
     }
 
-    //CRUD
     @FXML
     public void handleTambahTransaksi() {
         openTransaksiPopup(null);
@@ -181,7 +173,6 @@ public class DashboardController { // Nama Class Sudah Benar
             TransaksiController tc = loader.getController();
             tc.setUser(currentUserId);
             
-            // PENTING: MENGIRIM DIRI SENDIRI (DashboardController)
             tc.setDashboardController(this);
             
             if (editData != null) {
