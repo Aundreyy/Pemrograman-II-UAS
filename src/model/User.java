@@ -7,9 +7,6 @@ public class User {
     private String passwordHash;
     private double dailyLimit;
 
-    // =========================
-    // Constructor untuk LOGIN
-    // =========================
     public User(int id, String username, String passwordHash, double dailyLimit) {
         this.id = id;
         this.username = username;
@@ -17,9 +14,12 @@ public class User {
         this.dailyLimit = dailyLimit;
     }
 
-    // =========================
-    // GETTER (Encapsulation)
-    // =========================
+    public User(String username, String passwordHash) {
+        this.username = username;
+        this.passwordHash = passwordHash;
+        this.dailyLimit = 0;
+    }
+
     public int getId() {
         return id;
     }
@@ -36,9 +36,6 @@ public class User {
         return dailyLimit;
     }
 
-    // =========================
-    // SETTER (khusus yang perlu)
-    // =========================
     public void setDailyLimit(double dailyLimit) {
         this.dailyLimit = dailyLimit;
     }
