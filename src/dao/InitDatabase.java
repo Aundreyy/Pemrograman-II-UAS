@@ -48,7 +48,7 @@ public class InitDatabase {
 
             if (getRecordCount("users") == 0) {
                 System.out.println("Membuat user permanen...");
-                User mainUser = new User("mahasiswa", "123");
+                User mainUser = new User("nathanael", "12345");
                 UserDAO.registerUser(mainUser);
 
                 SettingsDAO.saveDailyLimit(1, 50000); 
